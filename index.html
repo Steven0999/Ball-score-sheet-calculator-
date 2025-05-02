@@ -1,21 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Basketball Score Sheet Reader</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Basketball Score Sheet Scanner</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <h1>Basketball Score Sheet Scanner</h1>
-  <input type="file" accept="image/*" capture="environment" id="upload" />
+
+  <input type="file" accept="image/*" id="upload" />
   <button onclick="processImage()">Extract Data</button>
+
   <div id="loading">Processing image...</div>
   <canvas id="preview"></canvas>
-  
+
   <h2>Team A</h2>
   <table id="teamA" class="score-table">
     <thead>
-      <tr><th>Number</th><th>Name</th><th>Points</th><th>Fouls</th><th>Technicals</th></tr>
+      <tr>
+        <th>Number</th><th>Name</th><th>Points</th><th>Fouls</th><th>Technicals</th>
+      </tr>
     </thead>
     <tbody></tbody>
   </table>
@@ -23,7 +28,9 @@
   <h2>Team B</h2>
   <table id="teamB" class="score-table">
     <thead>
-      <tr><th>Number</th><th>Name</th><th>Points</th><th>Fouls</th><th>Technicals</th></tr>
+      <tr>
+        <th>Number</th><th>Name</th><th>Points</th><th>Fouls</th><th>Technicals</th>
+      </tr>
     </thead>
     <tbody></tbody>
   </table>
