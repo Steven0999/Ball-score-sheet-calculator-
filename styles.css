@@ -8,10 +8,18 @@ h1, h2 {
 }
 input, button {
   margin: 10px 0;
+  padding: 8px 12px;
 }
 #loading {
   display: none;
   color: red;
+  margin: 10px 0;
+}
+#notification {
+  display: none;
+  color: green;
+  margin: 10px 0;
+  font-weight: bold;
 }
 .score-table {
   border-collapse: collapse;
