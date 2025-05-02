@@ -2,6 +2,8 @@ function processImage() {
   const file = document.getElementById("upload").files[0];
   if (!file) return alert("Please upload an image first.");
 
+  document.getElementById("notification").style.display = "none";
+
   const reader = new FileReader();
   reader.onload = function () {
     const img = new Image();
@@ -16,6 +18,7 @@ function processImage() {
       Tesseract.recognize(canvas, 'eng').then(({ data: { text } }) => {
         document.getElementById("loading").style.display = "none";
         parseScores(text);
+        document.getElementById("notification").style.display = "block";
       });
     };
     img.src = reader.result;
@@ -24,19 +27,29 @@ function processImage() {
 }
 
 function parseScores(text) {
-  // Basic placeholder logic - depends on actual format of scoresheet
-  // Example parsing logic
-  const lines = text.split("\n").filter(line => /\d{1,2}/.test(line));
+  const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
   const teamA = [];
   const teamB = [];
+  let currentTeam = 'A';
 
   for (const line of lines) {
-    const match = line.match(/(\d+)\s+([A-Za-z ]+)\s+(\d+)\s+F:(\d+)\s+T:(\d+)/);
+    // Example format: "12 John Smith 14 F:2 T:1"
+    const match = line.match(/^(\d{1,2})\s+([A-Za-z .'-]+)\s+(\d{1,2})\s+F:(\d{1,2})\s+T:(\d{1,2})$/);
     if (match) {
       const [_, number, name, points, fouls, technicals] = match;
-      const player = { number, name: name.trim(), points, fouls, technicals };
-      if (teamA.length < 5) teamA.push(player);
-      else teamB.push(player);
+      const player = {
+        number,
+        name: name.trim(),
+        points,
+        fouls,
+        technicals
+      };
+      if (currentTeam === 'A') {
+        teamA.push(player);
+        if (teamA.length >= 5) currentTeam = 'B';
+      } else {
+        teamB.push(player);
+      }
     }
   }
 
