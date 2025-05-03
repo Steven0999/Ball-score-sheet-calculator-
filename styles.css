@@ -31,7 +31,9 @@ input, button {
   padding: 8px;
   text-align: center;
 }
-canvas {
-  display: none;
-  max-width: 100%;
+.score-table td {
+  background-color: #fff;
+}
+.score-table td[contenteditable="true"] {
+  background-color: #eaffea;
 }
