@@ -4,6 +4,7 @@ function processImage() {
 
   document.getElementById("notification").style.display = "none";
   document.getElementById("loading").style.display = "block";
+  document.getElementById("ocrOutput").textContent = "";
 
   const reader = new FileReader();
   reader.onload = function () {
@@ -15,14 +16,14 @@ function processImage() {
       canvas.height = img.height;
       ctx.drawImage(img, 0, 0);
 
-      // Crop Team A (top-left side)
+      // Crop Team A (top left)
       const teamAImageData = ctx.getImageData(0, 160, 450, 240);
       const teamACanvas = document.createElement("canvas");
       teamACanvas.width = teamAImageData.width;
       teamACanvas.height = teamAImageData.height;
       teamACanvas.getContext("2d").putImageData(teamAImageData, 0, 0);
 
-      // Crop Team B (bottom-left side)
+      // Crop Team B (bottom left)
       const teamBImageData = ctx.getImageData(0, 490, 450, 240);
       const teamBCanvas = document.createElement("canvas");
       teamBCanvas.width = teamBImageData.width;
@@ -35,6 +36,10 @@ function processImage() {
       ]).then(([resultA, resultB]) => {
         document.getElementById("loading").style.display = "none";
         document.getElementById("notification").style.display = "block";
+
+        // Show OCR result
+        document.getElementById("ocrOutput").textContent = 
+          "TEAM A OCR:\n" + resultA.data.text + "\n\nTEAM B OCR:\n" + resultB.data.text;
 
         const teamAPlayers = parsePlayers(resultA.data.text);
         const teamBPlayers = parsePlayers(resultB.data.text);
@@ -53,11 +58,12 @@ function parsePlayers(text) {
   const players = [];
 
   for (const line of lines) {
-    const match = line.match(/^(\d{2,3})\s+([A-Z .'-]+)\s*(\d{1,2})?/i);
+    const match = line.match(/^(\d{3})\s+([A-Z.\s'-]{3,})(.*)$/i);
     if (match) {
       const number = match[1];
-      const name = match[2].replace(/[^a-zA-Z .'-]/g, '').trim();
-      const fouls = line.match(/X|F|1|2|3|4|5/g)?.length || 0;
+      const name = match[2].replace(/\s+/g, ' ').trim();
+      const rest = match[3] || "";
+      const fouls = (rest.match(/X|F|1|2|3|4|5/g) || []).length;
 
       players.push({ number, name, fouls });
     }
